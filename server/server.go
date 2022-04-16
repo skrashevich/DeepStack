@@ -109,7 +109,7 @@ func scene(c *gin.Context) {
 
 func detection(c *gin.Context, queue_name string) {
 
-	nms := c.PostForm("min_confidence")
+	nms := c.DefaultPostForm("min_confidence", c.Query("min_confidence"))
 
 	if nms == "" {
 
@@ -177,7 +177,7 @@ func facedetection(c *gin.Context) {
 
 	file, _ := c.FormFile("image")
 
-	nms := c.PostForm("min_confidence")
+	nms := c.DefaultPostForm("min_confidence", c.Query("min_confidence"))
 
 	if nms == "" {
 
@@ -240,7 +240,7 @@ func facerecognition(c *gin.Context) {
 
 	file, _ := c.FormFile("image")
 
-	threshold := c.PostForm("min_confidence")
+	threshold := c.DefaultPostForm("min_confidence", c.Query("min_confidence"))
 
 	if threshold == "" {
 
@@ -300,7 +300,7 @@ func facerecognition(c *gin.Context) {
 
 func faceregister(c *gin.Context) {
 
-	userid := c.PostForm("userid")
+	userid := c.DefaultPostForm("userid", c.Query("userid"))
 
 	form, _ := c.MultipartForm()
 
@@ -459,7 +459,7 @@ func listface(c *gin.Context) {
 
 func deleteface(c *gin.Context) {
 
-	userid := c.PostForm("userid")
+	userid := c.DefaultPostForm("userid", c.Query("userid"))
 
 	TB_EMBEDDINGS := "TB_EMBEDDINGS"
 	face2 := os.Getenv("VISION-FACE2")

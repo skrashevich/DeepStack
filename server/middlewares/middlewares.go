@@ -336,7 +336,7 @@ func CheckUserID() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		userid := c.PostForm("userid")
+		userid := c.DefaultPostForm("userid", c.Query("userid"))
 
 		if userid == "" {
 
