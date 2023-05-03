@@ -124,6 +124,17 @@ class SharedOptions:
             FACE_MODEL="face_lite.pt",
             SUPERRESOLUTION_MODEL="bebygan_x4.pth",
         ),
+        "arm_rpi": Settings(
+            DETECTION_HIGH=416,
+            DETECTION_MEDIUM=320,
+            DETECTION_LOW=256,
+            DETECTION_MODEL="yolov5s.pt",
+            FACE_HIGH=384,
+            FACE_MEDIUM=256,
+            FACE_LOW=192,
+            FACE_MODEL="face_lite.pt",
+            SUPERRESOLUTION_MODEL="bebygan_x4.pth",
+        ),
         "windows_native": Settings(
             DETECTION_HIGH=640,
             DETECTION_MEDIUM=416,
