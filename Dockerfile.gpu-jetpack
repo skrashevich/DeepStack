@@ -58,7 +58,7 @@ RUN pip3 install onnxruntime_gpu-1.5.2-cp36-cp36m-linux_aarch64.whl
 
 #RUN mkdir /app/sharedfiles
 ADD https://huggingface.co/skrashevich/deepstack/resolve/main/yolov5s.pt /app/sharedfiles/yolov5s.pt
-ADD https://huggingface.co/skrashevich/deepstack/resolve/main/ace_lite.pt /app/sharedfiles/face_lite.pt
+ADD https://huggingface.co/skrashevich/deepstack/resolve/main/face_lite.pt /app/sharedfiles/face_lite.pt
 ADD https://huggingface.co/skrashevich/deepstack/resolve/main/facerec-high.model /app/sharedfiles/facerec-high.model
 ADD https://huggingface.co/skrashevich/deepstack/resolve/main/scene.pt /app/sharedfiles/scene.pt
 ADD https://huggingface.co/skrashevich/deepstack/resolve/main/categories_places365.txt /app/sharedfiles/categories_places365.txt

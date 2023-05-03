@@ -58,7 +58,7 @@ ENV MAKEFLAGS="-j4"
 RUN pip3 install redis
 RUN pip3 install Cython
 RUN pip3 install pillow
-RUN pip3 install scipy
+RUN apt-get install -y python3-scipy
 RUN pip3 install tqdm
 RUN pip3 install PyYAML
 RUN pip3 install easydict
