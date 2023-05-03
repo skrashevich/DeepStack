@@ -1,4 +1,11 @@
-FROM deepquestai/deepstack-base:arm64 as arm
+FROM python:3.7 as deepstack-base-arm64
+
+RUN apt-get update -y 
+RUN apt-get install redis-server -y 
+RUN pip3 install --upgrade setuptools pip
+RUN apt-get install libsm6 libxext6 libxrender1 libglib2.0-0 ffmpeg 'libmkl*' libopenblas-dev libopenblas0 liblapack-dev gfortran -y
+
+FROM deepstack-base-arm64 as arm
 
 ENV SLEEP_TIME 0.01
 ENV TIMEOUT 60
@@ -30,13 +37,14 @@ RUN pip3 install easydict
 RUN pip3 install future
 RUN pip3 install numpy
 
-RUN mkdir /app/sharedfiles
-COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
-COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
-COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
-COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
-COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
-COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
+#RUN mkdir /app/sharedfiles
+#COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
+#COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
+#COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
+#COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
+#COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
+#COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
+COPY --link --from=deepquestai/deepstack:latest /app/sharedfiles /app/sharedfiles
 
 RUN mkdir /app/server
 COPY ./server /app/server
