@@ -1,9 +1,37 @@
+# syntax=docker/dockerfile:labs
+
 FROM python:3.7 as deepstack-base
 
 RUN apt-get update -y 
 RUN apt-get install redis-server -y 
 RUN pip3 install --upgrade setuptools pip
 RUN apt-get install libsm6 libxext6 libxrender1 libglib2.0-0 ffmpeg 'libmkl*' libopenblas-dev libopenblas0 liblapack-dev gfortran -y
+
+FROM --platform=$BUILDPLATFORM golang:1.17.6 AS gobuilder
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+
+ENV GOOS=${TARGETOS}
+ENV GOARCH=${TARGETARCH}
+
+WORKDIR /build
+
+# Cache dependencies
+COPY ./server/go.mod ./server/go.sum ./
+RUN --mount=type=cache,target=/root/.cache/go-build go mod download
+
+COPY ./server .
+RUN --mount=type=cache,target=/root/.cache/go-build go build -ldflags "-s -w" -trimpath
+
+FROM --platform=$BUILDPLATFORM python:3.10-alpine as downloader
+WORKDIR /app
+RUN mkdir /app/sharedfiles
+
+ADD download_dependencies.py ./download_dependencies.py
+RUN python3 -mensurepip
+#RUN python3 -mpip install wget
+#RUN python3 download_dependencies.py
 
 FROM deepstack-base as cpu
 
@@ -22,11 +50,6 @@ ENV PROFILE desktop_cpu
 
 WORKDIR /app
 
-RUN wget https://go.dev/dl/go1.17.6.linux-amd64.tar.gz
-RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.17.6.linux-amd64.tar.gz
-ENV PATH=$PATH:/usr/local/go/bin
-RUN rm go1.17.6.linux-amd64.tar.gz
-
 RUN pip install onnxruntime==0.4.0
 
 RUN pip3 install redis
@@ -43,18 +66,16 @@ RUN pip3 install future
 RUN pip3 install numpy
 
 #RUN mkdir /app/sharedfiles
-#COPY ./sharedfiles/yolov5m.pt /app/sharedfiles/yolov5m.pt
-#COPY ./sharedfiles/face.pt /app/sharedfiles/face.pt
-#COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
-#COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
-#COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
-#COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
-COPY --link --from=deepquestai/deepstack:latest /app/sharedfiles /app/sharedfiles
+ADD https://huggingface.co/skrashevich/deepstack/resolve/main/yolov5m.pt /app/sharedfiles/yolov5m.pt
+ADD https://huggingface.co/skrashevich/deepstack/resolve/main/face.pt /app/sharedfiles/face.pt
+ADD https://huggingface.co/skrashevich/deepstack/resolve/main/facerec-high.model /app/sharedfiles/facerec-high.model
+ADD https://huggingface.co/skrashevich/deepstack/resolve/main/scene.pt /app/sharedfiles/scene.pt
+ADD https://huggingface.co/skrashevich/deepstack/resolve/main/categories_places365.txt /app/sharedfiles/categories_places365.txt
+ADD https://huggingface.co/skrashevich/deepstack/resolve/main/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
+#COPY --link --from=deepquestai/deepstack:latest /app/sharedfiles /app/sharedfiles
 
-RUN mkdir /app/server
-COPY ./server /app/server
-WORKDIR /app/server
-RUN go build
+COPY --link --from=gobuilder /build/server /build/assets /build/templates /build/index.html /build/version.txt /app/server/
+
 WORKDIR /app
 
 RUN mkdir /app/intelligencelayer
