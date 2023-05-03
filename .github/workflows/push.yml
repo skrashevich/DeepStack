@@ -23,6 +23,10 @@ jobs:
               arch: linux/amd64
             - system: gpu
               arch: linux/amd64
+              base: cuda
+            - system: gpu
+              arch: linux/amd64
+              base: gpu
             - system: gpu-jetpack
               arch: linux/amd64
       fail-fast: false
@@ -57,6 +61,8 @@ jobs:
         tags: |
           ghcr.io/${{ steps.lowercaseRepo.outputs.lowercase }}:${{ matrix.system }}-${{ env.SHORT_SHA }}
           ghcr.io/${{ steps.lowercaseRepo.outputs.lowercase }}:${{ matrix.system }}-${{ env.TAG }}
+        build-args: |
+          tag=${{ matrix.base }}
         platforms: ${{ matrix.arch }}
         cache-from: type=gha,scope=${{ matrix.system }}
         cache-to: type=gha,mode=max,scope=${{ matrix.system }}
