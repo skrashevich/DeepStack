@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:labs
 
-FROM python:3.7 as deepstack-base
+FROM python:3.8 as deepstack-base
 
 RUN apt-get update -y 
 RUN apt-get install redis-server -y 
@@ -64,6 +64,7 @@ RUN pip3 install PyYAML
 RUN pip3 install easydict
 RUN pip3 install future
 RUN apt-get install -y --no-install-recommends python3-numpy
+RUN apt-get install -y --no-install-recommends python3-torch python3-torchvision
 
 #RUN mkdir /app/sharedfiles
 ADD https://huggingface.co/skrashevich/deepstack/resolve/main/yolov5s.pt /app/sharedfiles/yolov5s.pt

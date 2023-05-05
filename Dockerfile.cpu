@@ -64,6 +64,8 @@ RUN pip3 install Matplotlib
 RUN pip3 install easydict
 RUN pip3 install future
 RUN pip3 install numpy
+RUN pip3 install 'torch>1.7,<1.10'
+RUN pip3 install 'torchvision<0.10'
 
 #RUN mkdir /app/sharedfiles
 ADD https://huggingface.co/skrashevich/deepstack/resolve/main/yolov5m.pt /app/sharedfiles/yolov5m.pt
