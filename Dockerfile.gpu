@@ -3,6 +3,7 @@ ARG tag
 
 FROM nvidia/cuda:10.1-cudnn7-runtime-ubuntu16.04 as deepstack-base-cuda
 
+RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
 RUN apt-get update -y
 RUN apt install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa -y
