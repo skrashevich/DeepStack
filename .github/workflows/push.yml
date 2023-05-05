@@ -16,7 +16,7 @@ jobs:
             - system: arm-rpi
               arch: linux/arm/v7
             - system: arm64-cpu
-              arch: linux/amd64
+              arch: linux/arm64
             - system: arm64-rpi
               arch: linux/arm64
             - system: cpu
