@@ -65,7 +65,11 @@ ADD https://huggingface.co/skrashevich/deepstack/resolve/main/categories_places3
 ADD https://huggingface.co/skrashevich/deepstack/resolve/main/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
 #COPY --link --from=deepquestai/deepstack:latest /app/sharedfiles /app/sharedfiles
 
-COPY --link --from=gobuilder /build/server /build/assets /build/templates /build/index.html /build/version.txt /app/server/
+COPY --link --from=gobuilder /build/server /app/server/server
+ADD ./server/assets /app/server/assets
+ADD ./server/templates /app/server/templates
+ADD ./server/index.html /app/server/index.html
+ADD ./server/version.txt /app/server/version.txt
 
 WORKDIR /app
 
